@@ -31,7 +31,7 @@ export default class AccountBar extends React.Component {
 		return (
 			<Drawer open={isOpen}>
 				<List>
-					<MenuItem onTouchTap={() => this._dostuff()}>Stuff</MenuItem>
+					<MenuItem onTouchTap={() => this._dostuff()}>Login</MenuItem>
 				</List>
 				<Divider/>
 				<MenuItem onTouchTap={onClose}>Close</MenuItem>

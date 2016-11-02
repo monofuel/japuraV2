@@ -22,7 +22,10 @@ export default class NavBar extends React.Component {
 			<Paper style={style}>
 				<List>
 					<ListItem primaryText="Home" onClick={() => switchPane('home')}/>
-					<ListItem primaryText="Void" onClick={() => switchPane('void')}/>
+					<ListItem primaryText="Dynmap" onClick={() => switchPane('dynmap')}/>
+					<ListItem primaryText="FFXIVMC" onClick={() => switchPane('ffxivmc')}/>
+					<ListItem primaryText="BadMars" onClick={() => switchPane('badmars')}/>
+					<ListItem primaryText="About" onClick={() => switchPane('about')}/>
 				</List>
 			</Paper>
 		);
