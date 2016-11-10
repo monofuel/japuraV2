@@ -2,7 +2,6 @@ package db
 
 import (
 	"fmt"
-	"log"
 	"os"
 
 	"labix.org/v2/mgo"
@@ -16,11 +15,7 @@ type MongoDatabase struct {
 	*mgo.Database
 }
 
-var _ Database = MongoDatabase{}
-
-var mongoDatabase MongoDatabase
-
-func init() {
+func MongoSetup() (*MongoDatabase, error) {
 	if mongoServer == "" {
 		mongoServer = "localhost"
 	}
@@ -29,13 +24,14 @@ func init() {
 	}
 	session, err := mgo.Dial(mongoServer)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
-	mongoDatabase = MongoDatabase{session.DB(database)}
+	mongoDatabase := MongoDatabase{session.DB(database)}
 	err = mongoDatabase.indicies()
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
+	return &mongoDatabase, nil
 }
 
 func (mdb MongoDatabase) indicies() error {
@@ -60,71 +56,151 @@ func (mdb MongoDatabase) indicies() error {
 		return err
 	}
 
+	sessCol := mdb.getPostCollection()
+	index = mgo.Index{
+		Key:      []string{"session_key", "user_id"},
+		Unique:   true,
+		DropDups: true,
+	}
+	err = sessCol.EnsureIndex(index)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
-func (mdb MongoDatabase) ListUsers() ([]User, error) {
+func (mdb *MongoDatabase) ListUsers() ([]User, error) {
 	userCol := mdb.getUserCollection()
 	var users []User
 	err := userCol.Find(bson.M{}).All(&users)
 	return users, err
 }
 
-func (mdb MongoDatabase) AddUser(user User) (int64, error) {
+func (mdb *MongoDatabase) AddUser(user *User) (string, error) {
 	userCol := mdb.getUserCollection()
+	user.ID = bson.NewObjectId()
 	err := userCol.Insert(user)
-	var result User
-	userCol.Find(bson.M{"username": user.Username}).One(&result)
-	fmt.Println(result)
-	return 0, err
+	return user.ID.Hex(), err
 }
 
-func (mdb MongoDatabase) GetUser(id int64) (*User, error) {
-	return nil, nil
+func (mdb *MongoDatabase) FindUserByName(username string) (*User, error) {
+	userCol := mdb.getUserCollection()
+	foundUser := &User{}
+	err := userCol.Find(bson.M{"username": username}).One(foundUser)
+	return foundUser, err
+}
+
+func (mdb *MongoDatabase) FindUserByGoogleID(googID string) (*User, error) {
+	userCol := mdb.getUserCollection()
+	foundUser := &User{}
+	err := userCol.Find(bson.M{"google.id": googID}).One(foundUser)
+	if err != nil && err.Error() == "not found" {
+		return nil, nil
+	}
+	return foundUser, err
+}
+
+func (mdb *MongoDatabase) GetUser(id string) (*User, error) {
+	userCol := mdb.getUserCollection()
+	foundUser := &User{}
+	err := userCol.FindId(bson.ObjectIdHex(id)).One(foundUser)
+	if err != nil && err.Error() == "not found" {
+		return nil, nil
+	}
+	return foundUser, err
 }
 
 //Update a User
-func (mdb MongoDatabase) UpdateUser(id int64, user User) error {
-	return nil
+func (mdb *MongoDatabase) UpdateUser(id string, user *User) error {
+	userCol := mdb.getUserCollection()
+	user.ID = bson.ObjectIdHex(id)
+	err := userCol.UpdateId(user.ID, user)
+	return err
 }
 
 //Delete a User
-func (mdb MongoDatabase) DeleteUser(id int64) error {
-	return nil
+func (mdb *MongoDatabase) DeleteUser(id string) error {
+	userCol := mdb.getUserCollection()
+	return userCol.RemoveId(bson.ObjectIdHex(id))
 }
 
 //List Posts
-func (mdb MongoDatabase) GetPosts(cursor string) ([]Post, error) {
-	return nil, nil
+func (mdb *MongoDatabase) GetPosts(page int, limit int) ([]Post, error) {
+	postCol := mdb.getPostCollection()
+	var posts []Post
+	err := postCol.Find(bson.M{}).Limit(limit).Skip(page * limit).All(&posts)
+	return posts, err
 }
 
-func (mdb MongoDatabase) AddPost(post Post) (int64, error) {
-	return 0, nil
+func (mdb *MongoDatabase) AddPost(post *Post) (string, error) {
+	postCol := mdb.getPostCollection()
+	post.ID = bson.NewObjectId()
+	err := postCol.Insert(post)
+	return post.ID.Hex(), err
 }
 
 //get a Post
-func (mdb MongoDatabase) GetPost(id int64) (*Post, error) {
-	return nil, nil
+func (mdb *MongoDatabase) GetPost(id string) (*Post, error) {
+	postCol := mdb.getPostCollection()
+	foundPost := new(Post)
+	err := postCol.FindId(bson.ObjectIdHex(id)).One(foundPost)
+	if err != nil && err.Error() == "not found" {
+		return nil, nil
+	}
+	return foundPost, err
 }
 
 //Update a Post
-func (mdb MongoDatabase) UpdatePost(id int64, post Post) error {
-	return nil
+func (mdb *MongoDatabase) UpdatePost(id string, post *Post) error {
+	postCol := mdb.getPostCollection()
+	post.ID = bson.ObjectIdHex(id)
+	err := postCol.UpdateId(post.ID, post)
+	return err
 }
 
 //Delete a Post
-func (mdb MongoDatabase) DeletePost(id int64) error {
-	return nil
+func (mdb *MongoDatabase) DeletePost(id string) error {
+	postCol := mdb.getPostCollection()
+	return postCol.RemoveId(bson.ObjectIdHex(id))
 }
 
-func (mdb MongoDatabase) Close() {
-
+func (mdb *MongoDatabase) AddUserSession(sess *UserSession) (string, error) {
+	sessCol := mdb.getUserSessionCollection()
+	sess.ID = bson.NewObjectId()
+	err := sessCol.Insert(sess)
+	return sess.ID.Hex(), err
 }
 
-func (mdb MongoDatabase) getUserCollection() *mgo.Collection {
+func (mdb *MongoDatabase) GetUserSession(key string) (*UserSession, error) {
+	sessCol := mdb.getUserSessionCollection()
+	foundSess := new(UserSession)
+	err := sessCol.Find(bson.M{"session_key": key}).One(&foundSess)
+	return foundSess, err
+}
+
+func (mdb *MongoDatabase) DeleteUserSession(key string) error {
+	sessCol := mdb.getUserSessionCollection()
+	foundSess := new(UserSession)
+	err := sessCol.Find(bson.M{"session_key": key}).One(&foundSess)
+	if err != nil {
+		return err
+	}
+	return sessCol.RemoveId(foundSess.ID)
+}
+
+func (mdb *MongoDatabase) Close() {
+	mdb.Close()
+	fmt.Println("DB connection closed")
+}
+
+func (mdb *MongoDatabase) getUserCollection() *mgo.Collection {
 	return mdb.C("user")
 }
 
-func (mdb MongoDatabase) getPostCollection() *mgo.Collection {
+func (mdb *MongoDatabase) getPostCollection() *mgo.Collection {
 	return mdb.C("post")
+}
+
+func (mdb *MongoDatabase) getUserSessionCollection() *mgo.Collection {
+	return mdb.C("user_session")
 }

@@ -28,11 +28,32 @@ export default class AccountBar extends React.Component {
 	state : State
 	render() {
 		const {switchPane,isOpen,onClose} = this.props;
+		let list;
+		if (displayName) {
+			if (isUserAdmin) {
+				list = (
+					<List>
+						<MenuItem onTouchTap={() => {switchPane('newPost');onClose()}}>New Post</MenuItem>
+						<MenuItem onTouchTap={() => {switchPane('editPost');onClose()}}>Edit Post</MenuItem>
+					</List>
+				)
+			} else {
+				list = (
+					<List>
+						<MenuItem onTouchTap={() => {switchPane('logout');onClose()}}>Log Out</MenuItem>
+					</List>
+				)
+			}
+		} else {
+			list = (
+				<List>
+					<MenuItem onTouchTap={() => {switchPane('login');onClose()}}>Login</MenuItem>
+				</List>
+			)
+		}
 		return (
 			<Drawer open={isOpen}>
-				<List>
-					<MenuItem onTouchTap={() => this._dostuff()}>Login</MenuItem>
-				</List>
+				{list}
 				<Divider/>
 				<MenuItem onTouchTap={onClose}>Close</MenuItem>
 			</Drawer>

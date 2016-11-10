@@ -10,19 +10,15 @@ import Paper from 'material-ui/Paper';
 import NavBar from './navBar.jsx';
 import AccountBar from './accountBar.jsx'
 import HomePane from './homePane.jsx';
+import DynmapPane from './dynmapPane.jsx';
+import NewPostPane from './newPostPane.jsx';
+import AboutPane from './aboutPane.jsx';
 
 const style ={
-	display: 'flex',
-	height: '100%',
-	width: '100%',
-	flexDirection: 'column'
+	flex: 1,
+	flexDirection: 'column',
+	minHeight: '100%'
 }
-const paperStyle = {
-	display: 'flex',
-	flex:1,
-	zDepth: 0
-}
-
 type State = {
 	pane: PaneType,
 	sideBarOpen: boolean
@@ -39,6 +35,27 @@ export default class Index extends React.Component {
 			case 'home':
 				paneElement = <HomePane/>;
 				break;
+			case 'dynmap':
+				paneElement = <DynmapPane/>;
+				break;
+				case 'login':
+					window.location = '/login';
+					break;
+			case 'ffxivmc':
+				window.location = 'https://ffxivmc-1361.appspot.com/';
+				break;
+			case 'badmars':
+				window.location = '/badmars';
+				break;
+			case 'subreddit':
+				window.location = 'https://www.reddit.com/r/JapuraGaming/';
+				break;
+			case 'newPost':
+				paneElement = <NewPostPane/>;
+				break;
+			case 'about':
+				paneElement = <AboutPane/>;
+				break;
 			default:
 				paneElement = (<h1>Not implemented!</h1>)
 		}
@@ -48,11 +65,11 @@ export default class Index extends React.Component {
 			<MuiThemeProvider>
 				<div id="indexRoot" style={style}>
 					<AccountBar isOpen={sideBarOpen} switchPane={(pane: PaneType) => this._paneSwitch(pane)} onClose={() => this._toggleSideBar()}/>
-					<AppBar title="webapp template" onLeftIconButtonTouchTap={() => this._toggleSideBar()}/>
-					<Paper style={paperStyle}>
+					<AppBar title="Japura Gaming" onLeftIconButtonTouchTap={() => this._toggleSideBar()}/>
+					<div style={{display: 'flex',flex:1}}>
 						<NavBar switchPane={(pane: PaneType) => this._paneSwitch(pane)}/>
 						{paneElement}
-					</Paper>
+					</div>
 				</div>
 			</MuiThemeProvider>
 		);

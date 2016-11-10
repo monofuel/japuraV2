@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 //AppHandler is a wrapper around api requests that returns an AppError
@@ -57,4 +58,8 @@ func GetPageLimitParameters(r *http.Request) (int, int, error) {
 		return 0, 0, err
 	}
 	return page, limit, nil
+}
+
+func UnixTimestamp() int64 {
+	return time.Now().UnixNano() / int64(time.Millisecond)
 }

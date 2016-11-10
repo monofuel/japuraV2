@@ -9,8 +9,9 @@ import (
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
-	"github.com/monofuel/webapp-template/api"
-	"github.com/monofuel/webapp-template/util"
+	"github.com/monofuel/japuraV2/api"
+	"github.com/monofuel/japuraV2/auth"
+	"github.com/monofuel/japuraV2/util"
 )
 
 var webPort = os.Getenv("PORT")
@@ -20,6 +21,7 @@ func init() {
 	if webPort == "" {
 		webPort = "8085"
 	}
+
 	//TODO connect to database
 }
 
@@ -43,13 +45,24 @@ func registerHandlers() {
 	r.Methods("GET").PathPrefix("/css/").Handler(http.StripPrefix("/css", cssFs))
 
 	api.AddRoutes(r)
+	auth.AddRoutes(r)
 
 	http.Handle("/", handlers.CombinedLoggingHandler(os.Stderr, r))
 }
 
 func rootHandler(w http.ResponseWriter, r *http.Request) *util.AppError {
-
-	err := templates.ExecuteTemplate(w, "index.html", nil)
+	user, _, err := auth.AuthUser(w, r)
+	var pageSettings struct {
+		Admin       bool
+		DisplayName string
+	}
+	if err != nil {
+		fmt.Printf("failed to auth user: %v", err)
+	} else {
+		pageSettings.Admin = user.Admin
+		pageSettings.DisplayName = user.Username
+	}
+	err = templates.ExecuteTemplate(w, "index.html", pageSettings)
 	if err != nil {
 		return util.NewAppError(err, "failed to load index.html", 500)
 	}

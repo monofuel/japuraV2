@@ -2,7 +2,7 @@ package api
 
 import (
 	"github.com/gorilla/mux"
-	"github.com/monofuel/webapp-template/api/v1"
+	"github.com/monofuel/japuraV2/api/v1"
 )
 
 //AddRoutes adds all api endpoints

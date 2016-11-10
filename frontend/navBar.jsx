@@ -4,6 +4,7 @@ import React from 'react';
 import Paper from 'material-ui/Paper';
 import {List, ListItem} from 'material-ui/List';
 import Divider from 'material-ui/Divider';
+import Adsense from './adsense.js';
 
 const style = {
   width: '200px',
@@ -25,7 +26,9 @@ export default class NavBar extends React.Component {
 					<ListItem primaryText="Dynmap" onClick={() => switchPane('dynmap')}/>
 					<ListItem primaryText="FFXIVMC" onClick={() => switchPane('ffxivmc')}/>
 					<ListItem primaryText="BadMars" onClick={() => switchPane('badmars')}/>
+					<ListItem primaryText="/r/japuragaming" onClick={() => switchPane('subreddit')}/>
 					<ListItem primaryText="About" onClick={() => switchPane('about')}/>
+					<Adsense/>
 				</List>
 			</Paper>
 		);
