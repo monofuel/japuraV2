@@ -146,6 +146,17 @@ func logoutHandler(w http.ResponseWriter, r *http.Request) *util.AppError {
 	return nil
 }
 
+func AssertAdmin(w http.ResponseWriter, r *http.Request) *util.AppError {
+	user, _, err := AuthUser(w, r)
+	if err != nil {
+		return &util.AppError{nil, "failed to authenticate", 401}
+	}
+	if !user.Admin {
+		return &util.AppError{nil, "not admin", 401}
+	}
+	return nil
+}
+
 func AuthUser(w http.ResponseWriter, r *http.Request) (*db.User, *db.UserSession, error) {
 	session, err := store.Get(r, "authSession")
 	if err != nil {

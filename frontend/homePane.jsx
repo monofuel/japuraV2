@@ -1,10 +1,11 @@
 /* @flow */
 import React from 'react';
+import _ from 'lodash';
 import Paper from 'material-ui/Paper';
 import {Card, CardActions, CardHeader, CardTitle, CardText} from 'material-ui/Card';
 import CircularProgress from 'material-ui/CircularProgress';
 
-import {getRandom} from './testApi.js';
+import {getLatestPosts} from './postApi.js';
 
 const paperStyle = {
 	flex: 1,
@@ -14,41 +15,58 @@ const paperStyle = {
 }
 
 type State = {
-	randomNumber: number,
+	posts: Array<Post>,
 }
 
 export default class HomePane extends React.Component {
-	state: State = {randomNumber: 0};
+	state: State = {posts:[]};
 	render() {
-		const {randomNumber} = this.state;
+		const {posts} = this.state;
 		return (
-			<div style={{flex: 1, display: 'flex'}}>
-				<Paper style={paperStyle}>
-					<Card style={{flex: 1}}>
-						<CardHeader
-							title="template webapp"
-							avatar={<i className="fa fa-comment-o" aria-hidden="true"></i>}
-							/>
-						<CardText>
-							<p>
-								This is where content would go, IF I HAD ANY
-							</p>
-								<span style={{margin: '20px'}}>
-									a random number:
-									{randomNumber}
-								</span>
-						</CardText>
-					</Card>
-				</Paper>
+			<div style={{flex: 1, display: 'flex', flexDirection:'column'}}>
+				{ posts && posts.length == 0 ?
+					<Paper style={paperStyle}>
+						<Card style={{flex:1}}>
+							<CardHeader
+								title="Welcome"
+								avatar={<i className="fa fa-comment-o" aria-hidden="true"></i>}
+								/>
+							<CardText>
+								<p>
+									Loading content
+								</p>
+							</CardText>
+						</Card>
+					</Paper>
+					:
+					_.map(posts,(post) => {
+						return (
+							<Paper style={paperStyle}>
+								<Card style={{flex: 1}}>
+									<CardHeader
+										title="post thingy"
+										avatar={<i className="fa fa-comment-o" aria-hidden="true"></i>}
+										/>
+									<CardText>
+										<p>
+											{JSON.stringify(post)}
+										</p>
+									</CardText>
+								</Card>
+							</Paper>
+						)
+					})
+				}
+
 			</div>
 		);
 	}
 
 	componentDidMount() {
-		this._getRandomNumber();
+		this._getFrontpagePosts();
 	}
-	async _getRandomNumber() {
-		const x = await getRandom();
-		this.setState({randomNumber: x});
+	async _getFrontpagePosts() {
+		const posts = await getLatestPosts(0,10);
+		this.setState({posts: posts});
 	}
 }
