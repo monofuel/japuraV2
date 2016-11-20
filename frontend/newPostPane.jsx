@@ -3,6 +3,7 @@ import React from 'react';
 import Paper from 'material-ui/Paper';
 import {Card, CardActions, CardHeader, CardTitle, CardText} from 'material-ui/Card';
 import CircularProgress from 'material-ui/CircularProgress';
+import TextField from 'material-ui/TextField';
 
 import {getRandom} from './testApi.js';
 
@@ -31,8 +32,15 @@ export default class NewPostPane extends React.Component {
 							avatar={<i className="fa fa-comment-o" aria-hidden="true"></i>}
 							/>
 						<CardText>
+								<p>
+									<TextField hintText="Post Title" />
+								</p>
 							<p>
-								form stuff
+								<TextField
+								 hintText="Body"
+								 multiLine={true}
+								 fullWidth={true}
+							 />
 							</p>
 						</CardText>
 					</Card>
