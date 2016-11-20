@@ -1,10 +1,13 @@
-monofuel's example webapp template
+the new new NEW new NEW japura website
+
+short history of japura.net:
+first version was joomla
+second version was newer joomla
+third version was octopress
+forth version was nodejs/bootstrap
+this version is go/react (LAST VERSION i swear)
 
 go backend, react frontend
-
-I threw this together to provide a basic start for making a webapp with go and react.
-the makefile makes it real easy to get started.
-just run make setup once, make watch and just start coding.
 
 ## getting started
 - install go, and setup your gopath
@@ -28,9 +31,4 @@ just run make setup once, make watch and just start coding.
 ![alt text](screenshots/index.png "screenshots rock")
 
 ## TODO
-- dockerfile for building and running
-- add database examples
-	- logging system
-	- alerting system
-	- admin dashboard
-	- user auth system
+- seed initial 10 posts and their authors in the index HTMl request
