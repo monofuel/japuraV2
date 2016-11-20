@@ -40,8 +40,10 @@ func registerHandlers() {
 	r.Methods("GET").Path("/").Handler(util.AppHandler(rootHandler))
 
 	jsFs := http.FileServer(http.Dir("public/js"))
+	imageFs := http.FileServer(http.Dir("public/images"))
 	cssFs := http.FileServer(http.Dir("public/css"))
 	r.Methods("GET").PathPrefix("/js/").Handler(http.StripPrefix("/js", jsFs))
+	r.Methods("GET").PathPrefix("/images/").Handler(http.StripPrefix("/images", imageFs))
 	r.Methods("GET").PathPrefix("/css/").Handler(http.StripPrefix("/css", cssFs))
 
 	api.AddRoutes(r)
