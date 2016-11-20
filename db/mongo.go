@@ -56,7 +56,7 @@ func (mdb MongoDatabase) indicies() error {
 		return err
 	}
 
-	sessCol := mdb.getPostCollection()
+	sessCol := mdb.getUserSessionCollection()
 	index = mgo.Index{
 		Key:      []string{"session_key", "user_id"},
 		Unique:   true,
@@ -128,8 +128,15 @@ func (mdb *MongoDatabase) DeleteUser(id string) error {
 func (mdb *MongoDatabase) GetPosts(page int, limit int) ([]Post, error) {
 	postCol := mdb.getPostCollection()
 	var posts []Post
-	err := postCol.Find(bson.M{}).Limit(limit).Skip(page * limit).All(&posts)
-	return posts, err
+	err := postCol.Find(bson.M{"frontpage": true}).Limit(limit).Skip(page * limit).Sort("-timestamp").All(&posts)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println("adsfadsfss")
+	for _, post := range posts {
+		post.Key = post.ID.Hex()
+	}
+	return posts, nil
 }
 
 func (mdb *MongoDatabase) AddPost(post *Post) (string, error) {
@@ -194,11 +201,11 @@ func (mdb *MongoDatabase) Close() {
 }
 
 func (mdb *MongoDatabase) getUserCollection() *mgo.Collection {
-	return mdb.C("user")
+	return mdb.C("users")
 }
 
 func (mdb *MongoDatabase) getPostCollection() *mgo.Collection {
-	return mdb.C("post")
+	return mdb.C("posts")
 }
 
 func (mdb *MongoDatabase) getUserSessionCollection() *mgo.Collection {

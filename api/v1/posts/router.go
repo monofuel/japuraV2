@@ -2,6 +2,7 @@ package posts
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"path"
 
@@ -45,6 +46,7 @@ func getHandler(w http.ResponseWriter, r *http.Request) *util.AppError {
 	if err != nil {
 		return &util.AppError{err, "failed to get posts", 500}
 	}
+	fmt.Println("fetching posts:", len(posts))
 
 	js, err := json.Marshal(posts)
 	if err != nil {

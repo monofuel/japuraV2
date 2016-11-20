@@ -17,6 +17,10 @@ const paperStyle = {
 type State = {
 	posts: Array<Post>,
 }
+/* TODO
+show timestamp
+show author user
+*/
 
 export default class HomePane extends React.Component {
 	state: State = {posts:[]};
@@ -41,16 +45,14 @@ export default class HomePane extends React.Component {
 					:
 					_.map(posts,(post) => {
 						return (
-							<Paper style={paperStyle}>
+							<Paper style={paperStyle} id={post.key}>
 								<Card style={{flex: 1}}>
 									<CardHeader
-										title="post thingy"
+										title={post.title}
 										avatar={<i className="fa fa-comment-o" aria-hidden="true"></i>}
 										/>
 									<CardText>
-										<p>
-											{JSON.stringify(post)}
-										</p>
+										<div dangerouslySetInnerHTML={{__html:post.body}}></div>
 									</CardText>
 								</Card>
 							</Paper>
