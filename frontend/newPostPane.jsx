@@ -14,15 +14,16 @@ const paperStyle = {
 }
 
 type State = {
-	randomNumber: number,
+	title: string,
+	body: string,
 }
 
-export default class HomePane extends React.Component {
-	state: State = {randomNumber: 0};
+export default class NewPostPane extends React.Component {
+	state: State = {title: '',body:''};
 	render() {
-		const {randomNumber} = this.state;
+		const {title,body} = this.state;
 		return (
-			<div style={{flex: 1, display: 'flex'}}>
+			<div style={{flex: 1, display: 'flex',  flexDirection:'column'}}>
 				<Paper style={paperStyle}>
 					<Card style={{flex: 1}}>
 						<CardHeader
@@ -33,6 +34,17 @@ export default class HomePane extends React.Component {
 							<p>
 								form stuff
 							</p>
+						</CardText>
+					</Card>
+				</Paper>
+				<Paper style={paperStyle}>
+					<Card style={{flex: 1}}>
+						<CardHeader
+							title={title}
+							avatar={<i className="fa fa-comment-o" aria-hidden="true"></i>}
+							/>
+						<CardText>
+							<div dangerouslySetInnerHTML={{__html:body}}></div>
 						</CardText>
 					</Card>
 				</Paper>
