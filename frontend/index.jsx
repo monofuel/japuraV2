@@ -66,7 +66,7 @@ export default class Index extends React.Component {
 				<div id="indexRoot" style={style}>
 					<AccountBar isOpen={sideBarOpen} switchPane={(pane: PaneType) => this._paneSwitch(pane)} onClose={() => this._toggleSideBar()}/>
 					<AppBar title="Japura Gaming" onLeftIconButtonTouchTap={() => this._toggleSideBar()}/>
-					<div style={{display: 'flex',flex:1}}>
+					<div id="paneRoot" style={{display: 'flex',flex:1}}>
 						<NavBar switchPane={(pane: PaneType) => this._paneSwitch(pane)}/>
 						{paneElement}
 					</div>

@@ -27,7 +27,7 @@ export default class HomePane extends React.Component {
 	render() {
 		const {posts} = this.state;
 		return (
-			<div style={{flex: 1, display: 'flex', flexDirection:'column'}}>
+			<div style={{flex: 1, flexDirection:'column'}}>
 				{ posts && posts.length == 0 ?
 					<Paper style={paperStyle} key='placeholder'>
 						<Card style={{flex:1}}>
