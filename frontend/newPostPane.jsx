@@ -1,6 +1,7 @@
 /* @flow */
 import React from 'react';
 import Paper from 'material-ui/Paper';
+import Button from 'material-ui/FlatButton';
 import {Card, CardActions, CardHeader, CardTitle, CardText} from 'material-ui/Card';
 import CircularProgress from 'material-ui/CircularProgress';
 import TextField from 'material-ui/TextField';
@@ -56,6 +57,11 @@ export default class NewPostPane extends React.Component {
 						<CardText>
 							<div dangerouslySetInnerHTML={{__html:body}}></div>
 						</CardText>
+						<div>
+							<br></br>
+							<p style={{margin:'5px'}}>{'authoring as ' + displayName}</p>
+							<Button primary={true} style={{margin:'5px'}}>Submit</Button>
+						</div>
 					</Card>
 				</Paper>
 			</div>
