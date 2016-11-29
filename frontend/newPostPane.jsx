@@ -24,7 +24,7 @@ export default class NewPostPane extends React.Component {
 	render() {
 		const {title,body} = this.state;
 		return (
-			<div style={{flex: 1, display: 'flex',  flexDirection:'column'}}>
+			<div style={{flex: 1,  flexDirection:'column'}}>
 				<Paper style={paperStyle}>
 					<Card style={{flex: 1}}>
 						<CardHeader
@@ -32,16 +32,18 @@ export default class NewPostPane extends React.Component {
 							avatar={<i className="fa fa-comment-o" aria-hidden="true"></i>}
 							/>
 						<CardText>
-								<p>
-									<TextField hintText="Post Title" />
-								</p>
-							<p>
+							<div>
+								<TextField
+									hintText="Post Title"
+									onChange={(event) => this._onTitleChange(event)}
+								/>
 								<TextField
 								 hintText="Body"
+								 onChange={(event) => this._onBodyChange(event)}
 								 multiLine={true}
 								 fullWidth={true}
-							 />
-							</p>
+							 	/>
+					 		</div>
 						</CardText>
 					</Card>
 				</Paper>
@@ -60,11 +62,12 @@ export default class NewPostPane extends React.Component {
 		);
 	}
 
-	componentDidMount() {
-		this._getRandomNumber();
+	_onTitleChange(event: Object) {
+		const title = event.target.value;
+		this.setState({title});
 	}
-	async _getRandomNumber() {
-		const x = await getRandom();
-		this.setState({randomNumber: x});
+	_onBodyChange(event: Object) {
+		const body = event.target.value;
+		this.setState({body});
 	}
 }
