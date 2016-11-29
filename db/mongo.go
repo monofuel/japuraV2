@@ -132,10 +132,6 @@ func (mdb *MongoDatabase) GetPosts(page int, limit int) ([]Post, error) {
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("adsfadsfss")
-	for _, post := range posts {
-		post.Key = post.ID.Hex()
-	}
 	return posts, nil
 }
 

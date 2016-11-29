@@ -29,11 +29,11 @@ export default class HomePane extends React.Component {
 		return (
 			<div style={{flex: 1, display: 'flex', flexDirection:'column'}}>
 				{ posts && posts.length == 0 ?
-					<Paper style={paperStyle}>
+					<Paper style={paperStyle} key='placeholder'>
 						<Card style={{flex:1}}>
 							<CardHeader
-								title="Welcome"
-								avatar={<i className="fa fa-comment-o" aria-hidden="true"></i>}
+								title='Welcome'
+								avatar={<i className='fa fa-comment-o' aria-hidden='true'></i>}
 								/>
 							<CardText>
 								<p>
@@ -45,7 +45,7 @@ export default class HomePane extends React.Component {
 					:
 					_.map(posts,(post) => {
 						return (
-							<Paper style={paperStyle} id={post.key}>
+							<Paper style={paperStyle} key={post.key}>
 								<Card style={{flex: 1}}>
 									<CardHeader
 										title={post.title}

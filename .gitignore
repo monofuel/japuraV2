@@ -7,4 +7,4 @@ node_modules
 coverage.out
 
 settings.sh
-mongo/
+mongodb/
