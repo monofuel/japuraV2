@@ -11,7 +11,7 @@ export async function createPost(post:Post): Promise<Post> {
 }
 
 export async function updatePost(post:Post,key: string): Promise<Post> {
-	return makeRequest('/v1/posts/'+ key,'PUT',post)
+	return makeRequest('/v1/posts/'+ key,'PUT',null,JSON.stringify(post))
 }
 
 export async function deletePost(key: string): Promise<void> {

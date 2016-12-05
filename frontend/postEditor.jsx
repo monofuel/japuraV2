@@ -1,14 +1,13 @@
 /* @flow */
 import React from 'react';
+
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 import {Card, CardActions, CardHeader, CardTitle, CardText} from 'material-ui/Card';
-import CircularProgress from 'material-ui/CircularProgress';
 import TextField from 'material-ui/TextField';
 import Toggle from 'material-ui/Toggle';
 
-import {getRandom} from './testApi.js';
-import {createPost} from './postApi.js';
+import {createPost,updatePost} from './postApi.js';
 
 const paperStyle = {
 	flex: 1,
@@ -17,16 +16,43 @@ const paperStyle = {
 	zDepth: 5
 }
 
+
+type Props = {
+	existingPost?: Post,
+	closeCallback?: () => void,
+}
 type State = {
 	title: string,
 	body: string,
-	frontpage: boolean,
+	frontpage: boolean
 }
 
-export default class NewPostPane extends React.Component {
-	state: State = {title: '',body:'',frontpage: false};
+export default class PostEditor extends React.Component {
+	props: Props;
+	state: State;
+	constructor(props: Props) {
+		super(props);
+		const {existingPost} = props;
+		if (existingPost) {
+			console.log("setting default state",existingPost);
+			this.state = {
+				title: existingPost.title,
+				body: existingPost.body,
+				frontpage: existingPost.frontpage,
+			}
+		} else {
+			this.state = {
+				title: '',
+				body: '',
+				frontpage: false,
+			}
+		}
+	}
 	render() {
+		const {existingPost} = this.props;
 		const {title,body,frontpage} = this.state;
+		const newPost = !existingPost;
+
 		return (
 			<div style={{flex: 1,  flexDirection:'column'}}>
 				<Paper style={paperStyle}>
@@ -39,10 +65,12 @@ export default class NewPostPane extends React.Component {
 							<div>
 								<TextField
 									hintText="Post Title"
+									defaultValue={title}
 									onChange={(event) => this._onTitleChange(event)}
 								/>
 								<TextField
 								 hintText="Body"
+								 defaultValue={body}
 								 onChange={(event) => this._onBodyChange(event)}
 								 multiLine={true}
 								 fullWidth={true}
@@ -70,12 +98,20 @@ export default class NewPostPane extends React.Component {
 									toggled={frontpage}
 								/>
 							<br/>
-							<RaisedButton primary={true} style={{margin:'5px'}} label="Submit" onTouchTap={() => this._submit()}/>
+							{
+								newPost ?
+								<RaisedButton primary={true} style={{margin:'5px'}} label="Submit" onTouchTap={() => this._newPost()}/>
+								:
+								<div>
+									<RaisedButton primary={true} style={{margin:'5px'}} label="Update" onTouchTap={() => this._updatePost()}/>
+									<RaisedButton secondary={true} style={{margin:'5px'}} label="Cancel" onTouchTap={() => this._close()}/>
+								</div>
+							}
 						</div>
 					</Card>
 				</Paper>
 			</div>
-		);
+		)
 	}
 
 	_onTitleChange(event: Object) {
@@ -92,7 +128,8 @@ export default class NewPostPane extends React.Component {
 		this.setState({frontpage: !frontpage});
 	}
 
-	async _submit() {
+	async _newPost() {
+		const {closeCallback} = this.props;
 		const {title, body,frontpage} = this.state;
 		const post = {
 			title,
@@ -100,5 +137,36 @@ export default class NewPostPane extends React.Component {
 			frontpage,
 		}
 		const resp = await createPost(post);
+
+		if (closeCallback) {
+			closeCallback();
+		}
+	}
+	async _updatePost() {
+		const {existingPost,closeCallback} = this.props;
+		const {title, body,frontpage} = this.state;
+		const post: Post = Object.assign({},existingPost);
+
+		post.title = title;
+		post.body = body;
+		post.frontpage = frontpage;
+		if (!post.key) {
+			throw new Error("key missing from post");
+
+		}
+
+		const resp = await updatePost(post,post.key);
+
+		if (closeCallback) {
+			closeCallback();
+		}
+	}
+	_close() {
+		const {closeCallback} = this.props;
+		if (!closeCallback) {
+			console.log("close callback called when none set");
+			return;
+		}
+		closeCallback();
 	}
 }

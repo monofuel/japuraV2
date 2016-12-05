@@ -4,6 +4,7 @@ import _ from 'lodash';
 import Paper from 'material-ui/Paper';
 import {Card, CardActions, CardHeader, CardTitle, CardText} from 'material-ui/Card';
 import CircularProgress from 'material-ui/CircularProgress';
+import PostPaper from './postPaper.jsx';
 
 import {getLatestPosts} from './postApi.js';
 
@@ -45,17 +46,7 @@ export default class HomePane extends React.Component {
 					:
 					_.map(posts,(post) => {
 						return (
-							<Paper style={paperStyle} key={post.key}>
-								<Card style={{flex: 1}}>
-									<CardHeader
-										title={post.title}
-										avatar={<i className="fa fa-comment-o" aria-hidden="true"></i>}
-										/>
-									<CardText>
-										<div dangerouslySetInnerHTML={{__html:post.body}}></div>
-									</CardText>
-								</Card>
-							</Paper>
+							<PostPaper post={post} key={post.key}/>
 						)
 					})
 				}

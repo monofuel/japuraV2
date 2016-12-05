@@ -11,7 +11,7 @@ import NavBar from './navBar.jsx';
 import AccountBar from './accountBar.jsx'
 import HomePane from './homePane.jsx';
 import DynmapPane from './dynmapPane.jsx';
-import NewPostPane from './newPostPane.jsx';
+import PostEditor from './postEditor.jsx';
 import AboutPane from './aboutPane.jsx';
 
 const style ={
@@ -51,7 +51,7 @@ export default class Index extends React.Component {
 				window.location = 'https://www.reddit.com/r/JapuraGaming/';
 				break;
 			case 'newPost':
-				paneElement = <NewPostPane/>;
+				paneElement = <PostEditor/>;
 				break;
 			case 'about':
 				paneElement = <AboutPane/>;
