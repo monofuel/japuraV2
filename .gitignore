@@ -8,3 +8,4 @@ coverage.out
 
 settings.sh
 mongodb/
+Dockerfile

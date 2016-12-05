@@ -21,6 +21,7 @@ import (
 
 var clientID = os.Getenv("CLIENTID")
 var clientSecret = os.Getenv("CLIENTSECRET")
+var callbackUrl = os.Getenv("CALLBACKURL")
 
 var config = &oauth2.Config{
 	ClientID:     clientID,
@@ -29,7 +30,7 @@ var config = &oauth2.Config{
 	Scopes:   []string{"https://www.googleapis.com/auth/plus.login"},
 	Endpoint: google.Endpoint,
 	// Use "postmessage" for the code-flow for server side apps
-	RedirectURL: "http://dev.japura.net:8085/auth/google/callback",
+	RedirectURL: callbackUrl,
 }
 
 //creates a new store every time it starts

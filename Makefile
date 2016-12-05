@@ -4,7 +4,7 @@ run: build
 
 build: buildServer buildClient
 buildServer:
-	go build
+	CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo
 buildClient:
 	BABEL_ENV=production gulp
 
