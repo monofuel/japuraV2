@@ -12,6 +12,7 @@ import PostEditor from './postEditor.jsx';
 
 type Props = {
 	post: Post,
+	refreshCallback: () => void
 }
 
 type State = {
@@ -29,7 +30,7 @@ export default class PostPaper extends React.Component {
 	props: Props;
 	state: State = {editing: false}
 	render() {
-		const {post} = this.props;
+		const {post, refreshCallback} = this.props;
 		const {editing} = this.state;
 
 		const editMenu = (
@@ -45,7 +46,13 @@ export default class PostPaper extends React.Component {
 
 		if (editing) {
 				return (
-					<PostEditor existingPost={post} closeCallback={() => {this.setState({editing: false})}}/>
+					<PostEditor
+						existingPost={post}
+						closeCallback={() => {
+							this.setState({editing: false});
+							refreshCallback();
+						}}
+						/>
 				)
 		}
 		return (

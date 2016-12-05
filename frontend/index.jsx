@@ -2,6 +2,7 @@
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import React from 'react';
+import {green300} from 'material-ui/styles/colors';
 import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import AppBar from 'material-ui/AppBar';
@@ -60,9 +61,18 @@ export default class Index extends React.Component {
 				paneElement = (<h1>Not implemented!</h1>)
 		}
 
+		const theme = getMuiTheme({
+			palette: {
+			primary1Color: green300,
+			},
+			appBar: {
+				height: 50,
+			},
+		});
+
 		return (
 			// muiTheme={getMuiTheme(darkBaseTheme)}
-			<MuiThemeProvider>
+			<MuiThemeProvider muiTheme={theme}>
 				<div id="indexRoot" style={style}>
 					<AccountBar isOpen={sideBarOpen} switchPane={(pane: PaneType) => this._paneSwitch(pane)} onClose={() => this._toggleSideBar()}/>
 					<AppBar title="Japura Gaming" onLeftIconButtonTouchTap={() => this._toggleSideBar()}/>

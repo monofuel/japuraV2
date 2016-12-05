@@ -46,7 +46,14 @@ export default class HomePane extends React.Component {
 					:
 					_.map(posts,(post) => {
 						return (
-							<PostPaper post={post} key={post.key}/>
+							<PostPaper
+								post={post}
+								key={post.key}
+								refreshCallback={() => {
+									console.log("refreshing posts after update");
+									this._getFrontpagePosts();
+								}}
+							/>
 						)
 					})
 				}
