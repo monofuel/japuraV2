@@ -1,12 +1,14 @@
 /* @flow */
 import React from 'react';
 import Paper from 'material-ui/Paper';
-import Button from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
 import {Card, CardActions, CardHeader, CardTitle, CardText} from 'material-ui/Card';
 import CircularProgress from 'material-ui/CircularProgress';
 import TextField from 'material-ui/TextField';
+import Toggle from 'material-ui/Toggle';
 
 import {getRandom} from './testApi.js';
+import {createPost} from './postApi.js';
 
 const paperStyle = {
 	flex: 1,
@@ -18,12 +20,13 @@ const paperStyle = {
 type State = {
 	title: string,
 	body: string,
+	frontpage: boolean,
 }
 
 export default class NewPostPane extends React.Component {
-	state: State = {title: '',body:''};
+	state: State = {title: '',body:'',frontpage: false};
 	render() {
-		const {title,body} = this.state;
+		const {title,body,frontpage} = this.state;
 		return (
 			<div style={{flex: 1,  flexDirection:'column'}}>
 				<Paper style={paperStyle}>
@@ -58,9 +61,16 @@ export default class NewPostPane extends React.Component {
 							<div dangerouslySetInnerHTML={{__html:body}}></div>
 						</CardText>
 						<div>
-							<br></br>
+							<br/>
 							<p style={{margin:'5px'}}>{'authoring as ' + displayName}</p>
-							<Button primary={true} style={{margin:'5px'}}>Submit</Button>
+							<br/>
+								<Toggle
+									label="Front Page"
+									onToggle={() => this._frontpageToggle()}
+									toggled={frontpage}
+								/>
+							<br/>
+							<RaisedButton primary={true} style={{margin:'5px'}} label="Submit" onTouchTap={() => this._submit()}/>
 						</div>
 					</Card>
 				</Paper>
@@ -75,5 +85,20 @@ export default class NewPostPane extends React.Component {
 	_onBodyChange(event: Object) {
 		const body = event.target.value;
 		this.setState({body});
+	}
+
+	_frontpageToggle() {
+		const {frontpage} = this.state;
+		this.setState({frontpage: !frontpage});
+	}
+
+	async _submit() {
+		const {title, body,frontpage} = this.state;
+		const post = {
+			title,
+			body,
+			frontpage,
+		}
+		const resp = await createPost(post);
 	}
 }

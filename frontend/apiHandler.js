@@ -1,7 +1,9 @@
 /* @flow */
 import _ from 'lodash';
 
-export async function makeRequest(url: string, method: string, params: ?Object, body?: FormData): Promise<any> {
+type Body = FormData | string;
+
+export async function makeRequest(url: string, method: string, params: ?Object, body?: Body): Promise<any> {
     const xhttp = new XMLHttpRequest();
     const requestUrl = url + objectToParams(params);
     return new Promise((resolve, reject) => {

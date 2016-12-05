@@ -7,7 +7,7 @@ export async function getLatestPosts(page?: number, limit?: number): Promise<Arr
 }
 
 export async function createPost(post:Post): Promise<Post> {
-	return makeRequest('/v1/posts/','POST',post)
+	return makeRequest('/v1/posts/','POST',null,JSON.stringify(post))
 }
 
 export async function updatePost(post:Post,key: string): Promise<Post> {

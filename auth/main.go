@@ -97,6 +97,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) *util.AppError {
 	}
 
 	if user == nil {
+		fmt.Println("creating new user:", user)
 		user = new(db.User)
 		user.Google = googleAuthInfo
 		user.Username = googleAuthInfo.Name

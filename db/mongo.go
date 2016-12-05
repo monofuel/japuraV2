@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/monofuel/japuraV2/util"
+
 	"labix.org/v2/mgo"
 	"labix.org/v2/mgo/bson"
 )
@@ -45,16 +47,10 @@ func (mdb MongoDatabase) indicies() error {
 	if err != nil {
 		return err
 	}
-	index = mgo.Index{
-		Key:      []string{"timestamp", "user_id"},
-		Unique:   true,
-		DropDups: true,
-	}
+
 	postCol := mdb.getPostCollection()
-	err = postCol.EnsureIndex(index)
-	if err != nil {
-		return err
-	}
+	postCol.DropIndex("user_id")
+	postCol.DropIndex("timestamp")
 
 	sessCol := mdb.getUserSessionCollection()
 	index = mgo.Index{
@@ -138,6 +134,7 @@ func (mdb *MongoDatabase) GetPosts(page int, limit int) ([]Post, error) {
 func (mdb *MongoDatabase) AddPost(post *Post) (string, error) {
 	postCol := mdb.getPostCollection()
 	post.ID = bson.NewObjectId()
+	post.Timestamp = util.UnixTimestamp()
 	err := postCol.Insert(post)
 	return post.ID.Hex(), err
 }
