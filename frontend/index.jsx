@@ -45,6 +45,9 @@ export default class Index extends React.Component {
 			case 'ffxivmc':
 				window.location = 'https://ffxivmc-1361.appspot.com/';
 				break;
+			case 'github':
+				window.location = 'https://github.com/monofuel';
+				break;
 			case 'badmars':
 				window.location = '/badmars';
 				break;

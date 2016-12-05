@@ -28,10 +28,9 @@ go backend, react frontend
 - `setup` runs go get and npm install to set things up
 - `test` check/test frontend and backend
 
-![alt text](screenshots/index.png "screenshots rock")
-
 ## TODO
 - add authors to articles
+- add new screenshot to readme
 - add separate blogs for users
 - add RSS feed
 - show minecraft server status
