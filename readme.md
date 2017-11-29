@@ -28,7 +28,12 @@ go backend, react frontend
 - `setup` runs go get and npm install to set things up
 - `test` check/test frontend and backend
 
-![alt text](screenshots/index.png "screenshots rock")
-
 ## TODO
-- seed initial 10 posts and their authors in the index HTMl request
+- add authors to articles
+- add new screenshot to readme
+- add separate blogs for users
+- add RSS feed
+- show minecraft server status
+- add image upload when making posts
+- add paging system on frontend (already setup for backend)
+- seed initial 10 posts and their authors in the index.html request

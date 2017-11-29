@@ -26,6 +26,7 @@ export default class NavBar extends React.Component {
 					<ListItem primaryText="Dynmap" onClick={() => switchPane('dynmap')}/>
 					<ListItem primaryText="FFXIVMC" onClick={() => switchPane('ffxivmc')}/>
 					<ListItem primaryText="BadMars" onClick={() => switchPane('badmars')}/>
+					<ListItem primaryText="GitHub" onClick={() => switchPane('github')}/>
 					<ListItem primaryText="/r/japuragaming" onClick={() => switchPane('subreddit')}/>
 					<ListItem primaryText="About" onClick={() => switchPane('about')}/>
 					<Adsense/>
