@@ -46,7 +46,10 @@ export default class Index extends React.Component {
 				window.location = 'https://ffxivmc-1361.appspot.com/';
 				break;
 			case 'badmars':
-				window.location = '/badmars';
+				window.location = 'https://badmars.net';
+				break;
+			case 'EVE SoggySquad':
+				window.location = 'https://soggysquad.space';
 				break;
 			case 'subreddit':
 				window.location = 'https://www.reddit.com/r/JapuraGaming/';

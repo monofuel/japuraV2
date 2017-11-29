@@ -42,9 +42,11 @@ func registerHandlers() {
 	jsFs := http.FileServer(http.Dir("public/js"))
 	imageFs := http.FileServer(http.Dir("public/images"))
 	cssFs := http.FileServer(http.Dir("public/css"))
+	certFs := http.FileServer(http.Dir("public/.well-known"))
 	r.Methods("GET").PathPrefix("/js/").Handler(http.StripPrefix("/js", jsFs))
 	r.Methods("GET").PathPrefix("/images/").Handler(http.StripPrefix("/images", imageFs))
 	r.Methods("GET").PathPrefix("/css/").Handler(http.StripPrefix("/css", cssFs))
+	r.Methods("GET").PathPrefix("/.well-known/").Handler(http.StripPrefix("/.well-known/", certFs))
 
 	api.AddRoutes(r)
 	auth.AddRoutes(r)
